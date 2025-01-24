@@ -17,7 +17,9 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not connect to the database: %s\n", err)
 	}
-	defer db.Close()
+	if err := db.Close(); err != nil {
+		log.Printf("Could not close database connection: %s\n", err)
+	}
 
 	userEventsRepo := Repos.NewUserEventsRepo(db)
 
