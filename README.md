@@ -7,4 +7,6 @@ The server processes URL requests from the browser and returns a response in the
 - POST /delete_event 
 - GET /events_for_day 
 - GET /events_for_week 
-- GET /events_for_month 
+- GET /events_for_mont\
+Supported middleware for logging API requests.
+
