@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -29,6 +30,8 @@ func (p *DeleteEventParser) TryParse(r *http.Request) (Commands.ICommand, error)
 		if err != nil {
 			return nil, err
 		}
+
+		log.Printf("Delete event command parse %s\n", r.URL.Path)
 
 		return POST.CreateDeleteEventCommand(p.Service, userID, key, eventID), nil
 	}

@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/GET"
 	"WB2/Presentation/RestAPI/Parser"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -23,6 +24,8 @@ func (p *GetForWeekParser) TryParse(r *http.Request) (Commands.ICommand, error) 
 		if err != nil {
 			return nil, err
 		}
+
+		log.Printf("Get events for week command parse %s\n", r.URL.Path)
 
 		return GET.CreateForWeekCommand(p.Service, userID, key), nil
 	}

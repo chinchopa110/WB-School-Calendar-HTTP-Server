@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -20,6 +21,8 @@ func (p *AddEventParser) TryParse(r *http.Request) (Commands.ICommand, error) {
 		key := r.URL.Query().Get("key")
 		date := r.URL.Query().Get("date")
 		description := r.URL.Query().Get("description")
+
+		log.Printf("Add event command parse %s\n", r.URL.Path)
 
 		userID, err := strconv.Atoi(userIDStr)
 		if err != nil {

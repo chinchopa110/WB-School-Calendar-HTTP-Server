@@ -1,16 +1,26 @@
 package Domain
 
 import (
+	"encoding/json"
 	"errors"
 	"sync"
 	"time"
 )
 
 type User struct {
-	Id     int
-	Key    string
-	Events []Event
+	Id     int     `json:"id"`
+	Key    string  `json:"key"`
+	Events []Event `json:"events"`
 	mu     sync.Mutex
+}
+
+func (u *User) MarshalJSON() ([]byte, error) {
+	type Alias User
+	return json.Marshal(&struct {
+		Alias
+	}{
+		Alias: Alias(*u),
+	})
 }
 
 func (u *User) IsKey(maybeKey string) bool {

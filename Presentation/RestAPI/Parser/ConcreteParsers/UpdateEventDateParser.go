@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -30,6 +31,8 @@ func (p *UpdateEventDateParser) TryParse(r *http.Request) (Commands.ICommand, er
 		if err != nil {
 			return nil, err
 		}
+
+		log.Printf("Update event date command parse %s\n", r.URL.Path)
 
 		return POST.CreateUpdateEventDateCommand(p.Service, userID, key, eventID, newDateStr), nil
 	}

@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -30,6 +31,8 @@ func (p *UpdateEventDescriptionParser) TryParse(r *http.Request) (Commands.IComm
 		if err != nil {
 			return nil, err
 		}
+
+		log.Printf("Update event description command parse %s\n", r.URL.Path)
 
 		return POST.CreateUpdateEventDescriptionCommand(p.Service, userID, key, eventID, newDesc), nil
 	}

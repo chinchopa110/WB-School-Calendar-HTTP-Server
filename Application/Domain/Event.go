@@ -1,9 +1,20 @@
 package Domain
 
+import "encoding/json"
+
 type Event struct {
-	Id          int
-	Date        string
-	Description string
+	Id          int    `json:"id"`
+	Date        string `json:"date"`
+	Description string `json:"description"`
+}
+
+func (e *Event) MarshalJSON() ([]byte, error) {
+	type Alias Event
+	return json.Marshal(&struct {
+		Alias
+	}{
+		Alias: Alias(*e),
+	})
 }
 
 func (e *Event) UpdateDate(newDate string) Event {
