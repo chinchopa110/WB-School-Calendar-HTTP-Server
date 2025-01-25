@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"WB2/Presentation/RestAPI/Parser/ConcreteParsers/Validation"
 	"log"
 	"net/http"
 )
@@ -16,9 +17,14 @@ type AddUserParser struct {
 
 func (p *AddUserParser) TryParse(r *http.Request) (Commands.ICommand, error) {
 	if r.URL.Query().Get("type") == "AddUser" {
+		log.Printf("Add user command parse %s\n", r.URL.Path)
+
 		key := r.URL.Query().Get("key")
 
-		log.Printf("Add user command parse %s\n", r.URL.Path)
+		err := Validation.IsValidUser(key)
+		if err != nil {
+			return nil, err
+		}
 
 		return POST.CreateAddUserCommand(p.Service, key), nil
 	}

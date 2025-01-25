@@ -17,9 +17,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Could not connect to the database: %s\n", err)
 	}
-	if err := db.Close(); err != nil {
-		log.Printf("Could not close database connection: %s\n", err)
-	}
+
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Could not close database connection: %s\n", err)
+		}
+	}()
 
 	userEventsRepo := Repos.NewUserEventsRepo(db)
 
@@ -30,8 +33,13 @@ func main() {
 	handler = middleware.Logging(handler)
 	handler = middleware.PanicRecovery(handler)
 
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/", func(w http.ResponseWriter, r *http.Request) {
+		handler.ServeHTTP(w, r)
+	})
+
 	log.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", handler); err != nil {
+	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
 }

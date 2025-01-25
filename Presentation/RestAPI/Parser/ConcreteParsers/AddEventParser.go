@@ -5,6 +5,7 @@ import (
 	"WB2/Presentation/RestAPI/Commands"
 	"WB2/Presentation/RestAPI/Commands/POST"
 	"WB2/Presentation/RestAPI/Parser"
+	"WB2/Presentation/RestAPI/Parser/ConcreteParsers/Validation"
 	"log"
 	"net/http"
 	"strconv"
@@ -17,12 +18,17 @@ type AddEventParser struct {
 
 func (p *AddEventParser) TryParse(r *http.Request) (Commands.ICommand, error) {
 	if r.URL.Query().Get("type") == "AddEvent" {
+		log.Printf("Add event command parse %s\n", r.URL.Path)
+
 		userIDStr := r.URL.Query().Get("user_id")
 		key := r.URL.Query().Get("key")
 		date := r.URL.Query().Get("date")
 		description := r.URL.Query().Get("description")
 
-		log.Printf("Add event command parse %s\n", r.URL.Path)
+		err := Validation.IsValidEvent(userIDStr, key, date, description)
+		if err != nil {
+			return nil, err
+		}
 
 		userID, err := strconv.Atoi(userIDStr)
 		if err != nil {
