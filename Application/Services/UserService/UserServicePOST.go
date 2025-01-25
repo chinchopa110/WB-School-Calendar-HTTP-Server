@@ -14,7 +14,7 @@ func CreatePostService(repo Repos.IUserEventsRepo) *PostService {
 	return &PostService{repo: repo}
 }
 
-func (service *PostService) AddUser(newUser *Domain.User) (*Domain.User, error) {
+func (service PostService) AddUser(newUser *Domain.User) (*Domain.User, error) {
 	var res = service.repo.AddUser(newUser)
 	if res != nil {
 		return nil, res
@@ -22,7 +22,7 @@ func (service *PostService) AddUser(newUser *Domain.User) (*Domain.User, error) 
 	return newUser, nil
 }
 
-func (service *PostService) CreateEvent(userId int, date string, description string, key string) (Domain.Event, error) {
+func (service PostService) CreateEvent(userId int, date string, description string, key string) (Domain.Event, error) {
 	res, err := service.repo.GetUserById(userId)
 
 	if err != nil {
@@ -45,7 +45,7 @@ func (service *PostService) CreateEvent(userId int, date string, description str
 	return event, nil
 }
 
-func (service *PostService) UpdateEventDate(userId int, eventId int, date string, key string) (Domain.Event, error) {
+func (service PostService) UpdateEventDate(userId int, eventId int, date string, key string) (Domain.Event, error) {
 	res, err := service.repo.GetUserById(userId)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func (service *PostService) UpdateEventDate(userId int, eventId int, date string
 	return event, nil
 }
 
-func (service *PostService) UpdateEventDescription(userId int, eventId int, description string, key string) (Domain.Event, error) {
+func (service PostService) UpdateEventDescription(userId int, eventId int, description string, key string) (Domain.Event, error) {
 	res, err := service.repo.GetUserById(userId)
 
 	if err != nil {
@@ -87,7 +87,7 @@ func (service *PostService) UpdateEventDescription(userId int, eventId int, desc
 	return event, nil
 }
 
-func (service *PostService) DeleteEvent(userId int, eventId int, key string) (Domain.Event, error) {
+func (service PostService) DeleteEvent(userId int, eventId int, key string) (Domain.Event, error) {
 	res, err := service.repo.GetUserById(userId)
 
 	if err != nil {

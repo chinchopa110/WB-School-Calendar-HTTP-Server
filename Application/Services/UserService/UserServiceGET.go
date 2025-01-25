@@ -14,7 +14,18 @@ func CreateGetService(repo Repos.IUserEventsRepo) *GetService {
 	return &GetService{repo: repo}
 }
 
-func (service *GetService) EventsForDay(userId int, key string) ([]Domain.Event, error) {
+func (service GetService) Authentication(userId int, key string) error {
+	user, err := service.repo.GetUserById(userId)
+	if err != nil {
+		return err
+	}
+	if !user.IsKey(key) {
+		return errors.New("INCORRECT KEY")
+	}
+	return nil
+}
+
+func (service GetService) EventsForDay(userId int, key string) ([]Domain.Event, error) {
 	user, err := service.repo.GetUserById(userId)
 	if err != nil {
 		return nil, err
@@ -30,7 +41,7 @@ func (service *GetService) EventsForDay(userId int, key string) ([]Domain.Event,
 	return user.EventsForDay(), nil
 }
 
-func (service *GetService) EventsForWeek(userId int, key string) ([]Domain.Event, error) {
+func (service GetService) EventsForWeek(userId int, key string) ([]Domain.Event, error) {
 	user, err := service.repo.GetUserById(userId)
 	if err != nil {
 		return nil, err
@@ -46,7 +57,7 @@ func (service *GetService) EventsForWeek(userId int, key string) ([]Domain.Event
 	return user.EventsForWeek(), nil
 }
 
-func (service *GetService) EventsForMonth(userId int, key string) ([]Domain.Event, error) {
+func (service GetService) EventsForMonth(userId int, key string) ([]Domain.Event, error) {
 	user, err := service.repo.GetUserById(userId)
 	if err != nil {
 		return nil, err

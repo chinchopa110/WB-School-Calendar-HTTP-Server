@@ -57,5 +57,4 @@ func (s *HTTPServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Printf("End handling request: %s %s", r.Method, r.URL.Path)
 }

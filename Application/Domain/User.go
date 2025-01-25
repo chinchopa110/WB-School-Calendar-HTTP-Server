@@ -85,17 +85,18 @@ func (u *User) EventsForDay() []Event {
 
 func (u *User) EventsForWeek() []Event {
 	u.mu.Lock()
+	defer u.mu.Unlock()
 	var eventsForWeek []Event
-	start := time.Now()
+	start := time.Now().Truncate(24 * time.Hour)
 	end := start.AddDate(0, 0, 7)
 
 	for _, e := range u.Events {
 		eventDate, _ := time.Parse("2006-01-02", e.Date)
-		if eventDate.After(start) && eventDate.Before(end) {
+		if !eventDate.Before(start) && eventDate.Before(end) {
 			eventsForWeek = append(eventsForWeek, e)
 		}
 	}
-	u.mu.Unlock()
+
 	return eventsForWeek
 }
 
