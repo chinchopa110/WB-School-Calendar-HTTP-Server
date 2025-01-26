@@ -3,30 +3,8 @@ package Migration
 import (
 	"database/sql"
 	"fmt"
-	"log"
-
 	_ "github.com/lib/pq"
 )
-
-func Initial() {
-	connStr := "user=postgres dbname=wb2 password=123 host=localhost sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	if err := db.Ping(); err != nil {
-		log.Fatal(err)
-	}
-
-	err = runMigrations(db)
-	if err != nil {
-		log.Fatalf("Ошибка при выполнении миграции: %v", err)
-	}
-
-	fmt.Println("Миграция выполнена успешно!")
-}
 
 func runMigrations(db *sql.DB) error {
 	queries := []string{

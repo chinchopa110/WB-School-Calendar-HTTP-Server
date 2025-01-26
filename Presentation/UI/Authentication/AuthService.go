@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 )
@@ -20,33 +21,38 @@ func CreateAuthService(getService UserServices.IGetService) AuthService {
 
 func (service AuthService) Handle(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		showForm(w)
+		showForm(w, "")
 		return
 	}
 
 	if r.Method == http.MethodPost {
 		formData, err := processForm(r)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			showForm(w, "Неверный формат данных")
 			return
 		}
 
 		log.Printf("Получены данные: ID = %d, Key = %s\n", formData.UserID, formData.UserKey)
-		// TODO: доделываем авторизированное окно
-
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write([]byte("Данные успешно получены!"))
-
+		err = service.getService.Authentication(formData.UserID, formData.UserKey)
 		if err != nil {
-			http.Error(w, "Ошибка при отправке ответа: "+err.Error(), http.StatusInternalServerError)
+			showForm(w, "Неверный ID или Key")
+			return
 		}
+
+		redirectURL := url.URL{
+			Path:     "/authorized",
+			RawQuery: fmt.Sprintf("userId=%d&userKey=%s", formData.UserID, url.QueryEscape(formData.UserKey)),
+		}
+
+		http.Redirect(w, r, redirectURL.String(), http.StatusSeeOther)
+		return
+
 	} else {
 		http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 	}
 }
 
-func showForm(w http.ResponseWriter) {
+func showForm(w http.ResponseWriter, errorMessage string) {
 	htmlTemplate, err := os.ReadFile("Presentation/UI/resources/authentication.html")
 	if err != nil {
 		http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
@@ -60,9 +66,12 @@ func showForm(w http.ResponseWriter) {
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	err = tmpl.Execute(w, nil)
+	err = tmpl.Execute(w, struct {
+		ErrorMessage string
+	}{ErrorMessage: errorMessage})
+
 	if err != nil {
-		http.Error(w, "Ошибка при выполнении шаблона", http.StatusInternalServerError)
+		http.Error(w, "Ошибка при выполнении шаблона: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
@@ -75,6 +84,7 @@ type FormData struct {
 func processForm(r *http.Request) (FormData, error) {
 	err := r.ParseForm()
 	if err != nil {
+		log.Printf("ошибка при парсинге формы: %v", err)
 		return FormData{}, fmt.Errorf("ошибка при парсинге формы: %w", err)
 	}
 
@@ -83,6 +93,7 @@ func processForm(r *http.Request) (FormData, error) {
 
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
+		log.Printf("некорректный формат ID: %v", err)
 		return FormData{}, fmt.Errorf("некорректный формат ID: %w", err)
 	}
 

@@ -5,6 +5,7 @@ import (
 	"WB2/Infrastucture/DataAccess/Repositories"
 	"WB2/Presentation/RestAPI/Server"
 	"WB2/Presentation/UI/Authentication"
+	"WB2/Presentation/UI/Authorized/Menu"
 	"WB2/Presentation/middleware"
 	"database/sql"
 	"log"
@@ -39,10 +40,22 @@ func main() {
 	handlerUI = middleware.Logging(handlerUI)
 	handlerUI = middleware.PanicRecovery(handlerUI)
 
+	actionListService := Menu.CreateActionListService(
+		UserService.CreateGetService(userEventsRepo),
+		UserService.CreatePostService(userEventsRepo))
+	var handlerMenuUI http.Handler = http.HandlerFunc(actionListService.Handle)
+	handlerMenuUI = middleware.Logging(handlerMenuUI)
+	handlerMenuUI = middleware.PanicRecovery(handlerMenuUI)
+
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/", handlerAPI)
 	mux.Handle("/ui/", handlerUI)
+	mux.Handle("/authorized", handlerMenuUI)
+	mux.Handle("/add-event", handlerMenuUI)
+	mux.Handle("/events/day", handlerMenuUI)
+	mux.Handle("/events/week", handlerMenuUI)
+	mux.Handle("/events/month", handlerMenuUI)
 
 	log.Println("Starting application on :8080")
 

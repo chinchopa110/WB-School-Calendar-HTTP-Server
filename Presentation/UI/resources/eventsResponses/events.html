@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список событий</title>
+</head>
+<body>
+<h1>Список событий на {{.Period}}</h1>
+
+{{if .Events}}
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Дата</th>
+    <th>Описание</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{range .Events}}
+  <tr>
+    <td>{{.Id}}</td>
+    <td>{{.Date}}</td>
+    <td>{{.Description}}</td>
+  </tr>
+  {{end}}
+  </tbody>
+</table>
+{{else}}
+<p>Нет событий для отображения.</p>
+{{end}}
+
+</body>
+</html>
+

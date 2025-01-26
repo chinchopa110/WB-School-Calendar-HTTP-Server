@@ -34,10 +34,6 @@ func (service GetService) EventsForDay(userId int, key string) ([]Domain.Event, 
 		return nil, errors.New("INCORRECT KEY")
 	}
 
-	if len(user.EventsForDay()) == 0 {
-		return nil, errors.New("Events not found ")
-	}
-
 	return user.EventsForDay(), nil
 }
 
@@ -50,10 +46,6 @@ func (service GetService) EventsForWeek(userId int, key string) ([]Domain.Event,
 		return nil, errors.New("INCORRECT KEY")
 	}
 
-	if len(user.EventsForWeek()) == 0 {
-		return nil, errors.New("Events not found ")
-	}
-
 	return user.EventsForWeek(), nil
 }
 
@@ -64,10 +56,6 @@ func (service GetService) EventsForMonth(userId int, key string) ([]Domain.Event
 	}
 	if !user.IsKey(key) {
 		return nil, errors.New("INCORRECT KEY")
-	}
-
-	if len(user.EventsForMonth()) == 0 {
-		return nil, errors.New("Events not found ")
 	}
 
 	return user.EventsForMonth(), nil
