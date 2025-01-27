@@ -31,10 +31,13 @@ func HandleShowDayEvents(w http.ResponseWriter, account *Authorized.Account, get
 	}
 
 	err = tmpl.Execute(w, struct {
-		Events []Domain.Event
-		Period string
-	}{Events: events,
-		Period: "день"})
+		Account *Authorized.Account
+		Events  []Domain.Event
+		Period  string
+	}{
+		Events:  events,
+		Period:  "день",
+		Account: account})
 
 	if err != nil {
 		http.Error(w, "Ошибка при выполнении шаблона: "+err.Error(), http.StatusInternalServerError)

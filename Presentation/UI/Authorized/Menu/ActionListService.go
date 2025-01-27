@@ -4,6 +4,7 @@ import (
 	"WB2/Application/Contracts/UserServices"
 	"WB2/Presentation/UI/Authorized"
 	"WB2/Presentation/UI/Authorized/getHandlers"
+	"WB2/Presentation/UI/Authorized/postHandlers"
 	"html/template"
 	"log"
 	"net/http"
@@ -26,7 +27,7 @@ func (service *ActionListService) Handle(w http.ResponseWriter, r *http.Request)
 	case "/authorized":
 		service.showMenu(w, r)
 	case "/add-event":
-		service.handleAddEvent(w)
+		postHandlers.HandleAddEvent(w, r, service.account, service.postService)
 	case "/events/day":
 		getHandlers.HandleShowDayEvents(w, service.account, service.getService)
 	case "/events/week":
@@ -67,14 +68,5 @@ func (service *ActionListService) showMenu(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		http.Error(w, "Ошибка при выполнении шаблона: "+err.Error(), http.StatusInternalServerError)
 		return
-	}
-}
-
-func (service ActionListService) handleAddEvent(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	_, err := w.Write([]byte("Выбрано добавление события"))
-	if err != nil {
-		http.Error(w, "Ошибка при отправке ответа: "+err.Error(), http.StatusInternalServerError)
 	}
 }
