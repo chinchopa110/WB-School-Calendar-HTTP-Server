@@ -52,10 +52,13 @@ func main() {
 	mux.Handle("/api/", handlerAPI)
 	mux.Handle("/ui/", handlerUI)
 	mux.Handle("/authorized", handlerMenuUI)
-	mux.Handle("/add-event", handlerMenuUI)
 	mux.Handle("/events/day", handlerMenuUI)
 	mux.Handle("/events/week", handlerMenuUI)
 	mux.Handle("/events/month", handlerMenuUI)
+	mux.Handle("/add-event", handlerMenuUI)
+	mux.Handle("/update-date", handlerMenuUI)
+	mux.Handle("/update-description", handlerMenuUI)
+	mux.Handle("/delete-event", handlerMenuUI)
 
 	log.Println("Starting application on :8080")
 

@@ -4,17 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Добавить событие</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #343a40;
+        }
+        input[type="date"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 150px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3; 
+        }
+    </style>
 </head>
 <body>
-<h1>Добавить событие</h1>
-<form method="post" action="/add-event">
-    <label for="date">Дата:</label>
-    <input type="date" id="date" name="date" required><br><br>
-
-    <label for="description">Описание:</label>
-    <textarea id="description" name="description" required></textarea><br><br>
-
-    <button type="submit">Добавить</button>
-</form>
+<div class="container">
+    <h1 class="mb-4">Добавить событие</h1>
+    <form method="post" action="/add-event">
+        <div class="form-group">
+            <label for="date">Дата:</label>
+            <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+    </form>
+</div>
 </body>
 </html>

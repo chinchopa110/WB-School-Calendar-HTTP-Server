@@ -26,14 +26,20 @@ func (service *ActionListService) Handle(w http.ResponseWriter, r *http.Request)
 	switch r.URL.Path {
 	case "/authorized":
 		service.showMenu(w, r)
-	case "/add-event":
-		postHandlers.HandleAddEvent(w, r, service.account, service.postService)
 	case "/events/day":
 		getHandlers.HandleShowDayEvents(w, service.account, service.getService)
 	case "/events/week":
 		getHandlers.HandleShowWeekEvents(w, service.account, service.getService)
 	case "/events/month":
 		getHandlers.HandleShowMonthEvents(w, service.account, service.getService)
+	case "/add-event":
+		postHandlers.HandleAddEvent(w, r, service.account, service.postService)
+	case "/update-date":
+		postHandlers.HandleUpdateEventDate(w, r, service.account, service.postService)
+	case "/update-description":
+		postHandlers.HandleUpdateEventDescription(w, r, service.account, service.postService)
+	case "/delete-event":
+		postHandlers.HandleDeleteEvent(w, r, service.account, service.postService)
 	default:
 		http.NotFound(w, r)
 	}
