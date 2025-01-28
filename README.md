@@ -4,6 +4,20 @@
 а также сервис для работы с ApacheKafka: Consumer и Producer.
 ## API endpoints: 
 Базовый url: `http://localhost:8080/api/`
+### - POST/AddUser
+**Пример ответа** (`200 OK`):
+```json
+{
+  "User":
+    {
+      "id":6,
+      "key":"aoaoa12",
+      "events":null
+    }
+}
+```
+#### Примечание
+Id генерируется базой данных, для избежания коллизий.  
 ### - POST/AddEvent  
 **Пример ответа** (`200 OK`):
 ```json
@@ -16,6 +30,8 @@
         }
     }
   ```
+#### Примечание
+Id генерируется базой данных, для избежания коллизий.
 ### - POST/UpdateEventDate  
 **Пример ответа** (`200 OK`):
 ```json
