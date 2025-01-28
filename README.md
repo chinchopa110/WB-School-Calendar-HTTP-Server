@@ -83,7 +83,7 @@
 ```json
   {
   "id": 123,
-  "key": "some_secret_key",
+  "key": "ahaha000",
       "events": [
       {
           "id": 1,
