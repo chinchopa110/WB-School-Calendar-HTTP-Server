@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UserWithEvents",
+  "description": "Структура пользователя с событиями",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Уникальный идентификатор пользователя"
+    },
+    "key": {
+      "type": "string",
+      "description": "Ключ пользователя"
+    },
+    "events": {
+      "type": "array",
+      "description": "Массив событий пользователя",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Уникальный идентификатор события"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Дата события в формате YYYY-MM-DD"
+          },
+          "description": {
+            "type": "string",
+            "description": "Описание события"
+          }
+        },
+        "required": ["id", "date", "description"]
+      }
+    }
+  },
+  "required": [
+    "id",
+    "key",
+    "events"
+  ]
+}

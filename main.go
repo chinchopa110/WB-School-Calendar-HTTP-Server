@@ -7,6 +7,7 @@ import (
 	"WB2/Presentation/UI/Authentication"
 	"WB2/Presentation/UI/Authorized/Menu"
 	"WB2/Presentation/middleware"
+	"WB2/config"
 	"database/sql"
 	"log"
 	"net/http"
@@ -15,6 +16,7 @@ import (
 )
 
 func main() {
+	//GETUP SQL
 	connStr := "user=postgres password=123 dbname=wb2 sslmode=disable"
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -26,9 +28,9 @@ func main() {
 			log.Printf("Could not close database connection: %s\n", err)
 		}
 	}()
-
 	userEventsRepo := Repos.NewUserEventsRepo(db)
 
+	// GETUP SERVER(API+UI)
 	httpServer := Server.NewHTTPServer(userEventsRepo)
 
 	var handlerAPI http.Handler = http.HandlerFunc(httpServer.ServeHTTP)
@@ -65,4 +67,27 @@ func main() {
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
+
+	//GETUP KAFKA
+	kafkaConfig := config.InitKafkaConfig()
+	consumer := kafkaConfig.NewKafkaConsumer()
+	if consumer == nil {
+		log.Fatalf("Failed to create consumer")
+	}
+
+	producer := kafkaConfig.NewKafkaProducer()
+	if producer == nil {
+		log.Fatalf("Failed to create producer")
+	}
+
+	defer func() {
+		if err := consumer.Close(); err != nil {
+			log.Printf("Failed to close consumer %v", err)
+		}
+		if err := producer.Close(); err != nil {
+			log.Printf("Failed to close producer %v", err)
+		}
+	}()
+
+	log.Println("Done.")
 }
