@@ -7,8 +7,7 @@ import (
 )
 
 func Run() {
-	connStr := "user=postgres password=123 dbname=wb2 sslmode=disable"
-	db := config.GetUpSQL(connStr)
+	db := config.GetUpSQL()
 
 	userEventsRepo := Repos.NewUserEventsRepo(db)
 	config.GetUpServer(userEventsRepo)
