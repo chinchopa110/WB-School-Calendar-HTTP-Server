@@ -6,7 +6,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func runMigrations(db *sql.DB) error {
+func RunMigrations(db *sql.DB) error {
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS Events (
 			Id SERIAL PRIMARY KEY,
