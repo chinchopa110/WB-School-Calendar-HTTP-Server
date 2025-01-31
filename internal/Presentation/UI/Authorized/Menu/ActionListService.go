@@ -56,7 +56,7 @@ func (service *ActionListService) showMenu(w http.ResponseWriter, r *http.Reques
 	}
 	service.account = &Authorized.Account{Id: userId, Key: userKey}
 
-	htmlTemplate, err := os.ReadFile("internal/Presentation/UI/resources/menu.html")
+	htmlTemplate, err := os.ReadFile("web/resources/menu.html")
 	if err != nil {
 		http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
 		return

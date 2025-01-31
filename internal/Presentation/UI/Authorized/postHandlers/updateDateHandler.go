@@ -12,7 +12,7 @@ import (
 )
 
 func HandleUpdateEventDate(w http.ResponseWriter, r *http.Request, account *Authorized.Account, postService UserServices.IPostService) {
-	htmlTemplate, err := os.ReadFile("internal/Presentation/UI/resources/updateForms/date.html")
+	htmlTemplate, err := os.ReadFile("web/resources/updateForms/date.html")
 	if err != nil {
 		http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
 		return

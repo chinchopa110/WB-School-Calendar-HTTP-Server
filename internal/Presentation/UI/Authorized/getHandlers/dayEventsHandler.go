@@ -10,7 +10,7 @@ import (
 )
 
 func HandleShowDayEvents(w http.ResponseWriter, account *Authorized.Account, getService UserServices.IGetService) {
-	htmlTemplate, err := os.ReadFile("internal/Presentation/UI/resources/eventsResponses/events.html")
+	htmlTemplate, err := os.ReadFile("web/resources/eventsResponses/events.html")
 	if err != nil {
 		http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
 		return

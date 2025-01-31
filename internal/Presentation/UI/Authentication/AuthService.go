@@ -53,7 +53,7 @@ func (service AuthService) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func showForm(w http.ResponseWriter, errorMessage string) {
-	htmlTemplate, err := os.ReadFile("internal/Presentation/UI/resources/authentication.html")
+	htmlTemplate, err := os.ReadFile("web/resources/authentication.html")
 	if err != nil {
 		http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
 		return

@@ -12,7 +12,7 @@ import (
 
 func HandleAddEvent(w http.ResponseWriter, r *http.Request, account *Authorized.Account, postService UserServices.IPostService) {
 	if r.Method == http.MethodGet {
-		htmlTemplate, err := os.ReadFile("internal/Presentation/UI/resources/addForm/addEvent.html")
+		htmlTemplate, err := os.ReadFile("web/resources/addForm/addEvent.html")
 		if err != nil {
 			http.Error(w, "Ошибка при обращении к шаблону", http.StatusInternalServerError)
 			return
