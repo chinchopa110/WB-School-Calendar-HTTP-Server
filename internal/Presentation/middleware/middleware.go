@@ -1,26 +1,34 @@
 package middleware
 
 import (
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"runtime/debug"
 	"time"
 )
 
-func Logging(next http.Handler) http.Handler {
+func Logging(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		start := time.Now()
 		next.ServeHTTP(w, req)
-		log.Printf("%s %s %s", req.Method, req.RequestURI, time.Since(start))
+		duration := time.Since(start)
+		logger.Info("request",
+			zap.String("method", req.Method),
+			zap.String("uri", req.RequestURI),
+			zap.Duration("duration", duration),
+		)
 	})
 }
 
-func PanicRecovery(next http.Handler) http.Handler {
+func PanicRecovery(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
 				http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-				log.Println(string(debug.Stack()))
+				logger.Error("panic recovery",
+					zap.Any("error", err),
+					zap.String("stack", string(debug.Stack())),
+				)
 			}
 		}()
 		next.ServeHTTP(w, req)

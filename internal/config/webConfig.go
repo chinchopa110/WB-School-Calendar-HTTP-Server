@@ -14,21 +14,31 @@ import (
 func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
 	httpServer := Server.NewHTTPServer(userEventsRepo)
 
+	logger, err := InitLogger("app.log")
+	if err != nil {
+		log.Fatalf("failed to initialize logger: %v", err)
+	}
+	defer func() {
+		if err := logger.Sync(); err != nil {
+			log.Printf("failed to sync logger: %v", err)
+		}
+	}()
+
 	var handlerAPI http.Handler = http.HandlerFunc(httpServer.ServeHTTP)
-	handlerAPI = middleware.Logging(handlerAPI)
-	handlerAPI = middleware.PanicRecovery(handlerAPI)
+	handlerAPI = middleware.Logging(logger, handlerAPI)
+	handlerAPI = middleware.PanicRecovery(logger, handlerAPI)
 
 	authService := Authentication.CreateAuthService(UserService2.CreateGetService(userEventsRepo))
 	var handlerUI http.Handler = http.HandlerFunc(authService.Handle)
-	handlerUI = middleware.Logging(handlerUI)
-	handlerUI = middleware.PanicRecovery(handlerUI)
+	handlerUI = middleware.Logging(logger, handlerUI)
+	handlerUI = middleware.PanicRecovery(logger, handlerUI)
 
 	actionListService := Menu.CreateActionListService(
 		UserService2.CreateGetService(userEventsRepo),
 		UserService2.CreatePostService(userEventsRepo))
 	var handlerMenuUI http.Handler = http.HandlerFunc(actionListService.Handle)
-	handlerMenuUI = middleware.Logging(handlerMenuUI)
-	handlerMenuUI = middleware.PanicRecovery(handlerMenuUI)
+	handlerMenuUI = middleware.Logging(logger, handlerMenuUI)
+	handlerMenuUI = middleware.PanicRecovery(logger, handlerMenuUI)
 
 	mux := http.NewServeMux()
 
