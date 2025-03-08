@@ -41,7 +41,7 @@ func (u *User) UpdateEventDate(id int, newDate string) (Event, error) {
 		}
 	}
 	u.mu.Unlock()
-	return Event{}, errors.New("Not Found Event ")
+	return Event{}, errors.New("not found event")
 }
 
 func (u *User) UpdateEventDescription(id int, newDescription string) (Event, error) {
@@ -52,7 +52,7 @@ func (u *User) UpdateEventDescription(id int, newDescription string) (Event, err
 		}
 	}
 	u.mu.Unlock()
-	return Event{}, errors.New("Not Found Event ")
+	return Event{}, errors.New("not found event")
 }
 
 func (u *User) DeleteEvent(id int) (Event, error) {
@@ -66,7 +66,7 @@ func (u *User) DeleteEvent(id int) (Event, error) {
 		}
 	}
 	u.mu.Unlock()
-	return Event{}, errors.New("Not Found Event ")
+	return Event{}, errors.New("not found event")
 }
 
 func (u *User) EventsForDay() []Event {
