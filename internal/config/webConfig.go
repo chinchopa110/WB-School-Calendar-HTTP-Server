@@ -9,6 +9,7 @@ import (
 	"WB2/internal/Presentation/middleware"
 	"log"
 	"net/http"
+	"net/http/pprof"
 )
 
 func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
@@ -42,6 +43,12 @@ func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
 
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
+	mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
 	mux.Handle("/api/", handlerAPI)
 	mux.Handle("/ui/", handlerUI)
 	mux.Handle("/authorized", handlerMenuUI)
@@ -55,7 +62,11 @@ func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
 
 	log.Println("Starting application on :8080")
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
-		log.Fatalf("Could not start server: %s\n", err)
-	}
+	go func() {
+		if err := http.ListenAndServe(":8080", mux); err != nil {
+			log.Fatalf("Could not start server: %s\n", err)
+		}
+	}()
+
+	select {}
 }
