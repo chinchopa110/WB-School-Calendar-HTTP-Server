@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/pprof"
+	"sync"
 )
 
 func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
@@ -62,11 +63,14 @@ func GetUpServer(userEventsRepo *Repos.UserEventsRepo) {
 
 	log.Println("Starting application on :8080")
 
+	var wg sync.WaitGroup
+	wg.Add(1)
+
 	go func() {
 		if err := http.ListenAndServe(":8080", mux); err != nil {
 			log.Fatalf("Could not start server: %s\n", err)
 		}
 	}()
 
-	select {}
+	wg.Wait()
 }
